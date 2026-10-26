@@ -188,6 +188,7 @@ if (
   });
 
   botonCerrar.addEventListener("click", async () => {
+    alert("El botón de registro funciona");
     const { error } = await cliente.auth.signOut();
     mensaje.textContent = error
       ? "No se pudo cerrar la sesión."
