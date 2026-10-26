@@ -53,5 +53,155 @@ footer{text-align:center;padding:30px;color:#9eabc1;border-top:1px solid #263a59
 </section>
 </main>
 <footer>© 2026 ESTUDIOS IA CAMOENS · Aprender para avanzar.</footer>
+<!-- ESTUDIOS IA CAMOENS: ACCESO DE USUARIOS -->
+<section id="acceso" style="
+  max-width: 440px;
+  margin: 40px auto;
+  padding: 28px;
+  border-radius: 18px;
+  background: #17243b;
+  color: white;
+  font-family: Arial, sans-serif;
+">
+  <h2 style="text-align:center;">🎓 Aula virtual</h2>
+  <p style="text-align:center;">
+    Inicia sesión o crea tu cuenta.
+  </p>
+
+  <form id="formulario-acceso">
+    <label for="email">Correo electrónico</label>
+    <input
+      id="email"
+      type="email"
+      autocomplete="email"
+      required
+      placeholder="tu@correo.com"
+      style="box-sizing:border-box;width:100%;padding:12px;margin:8px 0 16px;"
+    >
+
+    <label for="password">Contraseña</label>
+    <input
+      id="password"
+      type="password"
+      autocomplete="current-password"
+      minlength="8"
+      required
+      placeholder="Mínimo 8 caracteres"
+      style="box-sizing:border-box;width:100%;padding:12px;margin:8px 0 16px;"
+    >
+
+    <button type="submit" style="
+      width:100%;padding:12px;margin-bottom:10px;
+      background:#52d6a0;border:0;border-radius:8px;
+      font-weight:bold;cursor:pointer;
+    ">Iniciar sesión</button>
+
+    <button id="registro" type="button" style="
+      width:100%;padding:12px;background:#fff;color:#17243b;
+      border:0;border-radius:8px;font-weight:bold;cursor:pointer;
+    ">Crear cuenta de alumno</button>
+
+    <p id="mensaje-acceso" role="status" aria-live="polite"></p>
+  </form>
+
+  <button id="cerrar-sesion" type="button" hidden>
+    Cerrar sesión
+  </button>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(() => {
+  // Sustituye estos dos valores por los de TU proyecto Supabase.
+  const SUPABASE_URL = "PEGA_AQUI_TU_PROJECT_URL";
+  const SUPABASE_PUBLISHABLE_KEY = "PEGA_AQUI_TU_PUBLISHABLE_KEY";
+
+  const mensaje = document.getElementById("mensaje-acceso");
+  const formulario = document.getElementById("formulario-acceso");
+  const botonRegistro = document.getElementById("registro");
+  const botonCerrar = document.getElementById("cerrar-sesion");
+
+  if (
+    SUPABASE_URL.includes("PEGA_AQUI") ||
+    SUPABASE_PUBLISHABLE_KEY.includes("PEGA_AQUI")
+  ) {
+    mensaje.textContent =
+      "Falta configurar la conexión con Supabase.";
+    return;
+  }
+
+  const cliente = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+  formulario.addEventListener("submit", async (evento) => {
+    evento.preventDefault();
+    mensaje.textContent = "Comprobando tus datos...";
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    const { error } = await cliente.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    mensaje.textContent = error
+      ? "No se pudo iniciar sesión. Comprueba tus datos y la confirmación del correo."
+      : "¡Has iniciado sesión correctamente!";
+
+    if (!error) {
+      botonCerrar.hidden = false;
+    }
+  });
+
+  botonRegistro.addEventListener("click", async () => {
+    mensaje.textContent = "Creando tu cuenta...";
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    if (!email || password.length < 8) {
+      mensaje.textContent =
+        "Introduce un correo válido y una contraseña de al menos 8 caracteres.";
+      return;
+    }
+
+    const { data, error } = await cliente.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: window.location.origin +
+          window.location.pathname
+      }
+    });
+
+    if (error) {
+      mensaje.textContent = "No se pudo crear la cuenta. Revisa los datos e inténtalo de nuevo.";
+      return;
+    }
+
+    mensaje.textContent = data.session
+      ? "¡Cuenta creada! Ya puedes iniciar sesión."
+      : "Cuenta creada. Revisa tu correo para confirmar el registro.";
+  });
+
+  botonCerrar.addEventListener("click", async () => {
+    const { error } = await cliente.auth.signOut();
+    mensaje.textContent = error
+      ? "No se pudo cerrar la sesión."
+      : "Has cerrado sesión.";
+    botonCerrar.hidden = true;
+  });
+
+  cliente.auth.getSession().then(({ data }) => {
+    if (data.session) {
+      mensaje.textContent = "Ya tienes una sesión iniciada.";
+      botonCerrar.hidden = false;
+    }
+  });
+})();
+</script>
 </body>
 </html>
