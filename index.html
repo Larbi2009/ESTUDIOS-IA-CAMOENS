@@ -120,16 +120,16 @@ footer{text-align:center;padding:30px;color:#9eabc1;border-top:1px solid #263a59
   const formulario = document.getElementById("formulario-acceso");
   const botonRegistro = document.getElementById("registro");
   const botonCerrar = document.getElementById("cerrar-sesion");
-
-  if (
-    SUPABASE_URL.includes("https://yzebqbuyliqczeswshqk.supabase.co/rest/v1/") ||
-    SUPABASE_PUBLISHABLE_KEY.includes("sb_publishable_Zjlfd1g9TErkZxMBlzNvlA_7N15XUgV")
-  ) {
-    mensaje.textContent =
-      "Falta configurar la conexión con Supabase.";
-    return;
-  }
-
+  ```javascript
+if (
+  SUPABASE_URL.includes("PEGA_AQUI") ||
+  SUPABASE_PUBLISHABLE_KEY.includes("PEGA_AQUI")
+) {
+  mensaje.textContent =
+    "Falta configurar la conexión con Supabase.";
+  return;
+}
+```
   const cliente = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_PUBLISHABLE_KEY
