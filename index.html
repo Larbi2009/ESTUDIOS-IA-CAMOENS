@@ -113,26 +113,30 @@ footer{text-align:center;padding:30px;color:#9eabc1;border-top:1px solid #263a59
 <script>
 (() => {
   // Sustituye estos dos valores por los de TU proyecto Supabase.
-  const SUPABASE_URL = "https://TU-PROYECTO.supabase.co";
-  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_Zjlfd1g9TErkZxMBlzNvlA_7N15XUgV";
+```javascript
+const SUPABASE_URL = "https://yzebqbuyliqczeswshqk.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_Zjlfd1g9TErkZxMBlzNvlA_7N15XUgV";
 
-  const mensaje = document.getElementById("mensaje-acceso");
-  const formulario = document.getElementById("formulario-acceso");
-  const botonRegistro = document.getElementById("registro");
-  const botonCerrar = document.getElementById("cerrar-sesion");
-  ```javascript
+const mensaje = document.getElementById("mensaje-acceso");
+const formulario = document.getElementById("formulario-acceso"); 
+const botonRegistro = document.getElementById("registro");
+const botonCerrar = document.getElementById("cerrar-sesion");
+
 if (
-  SUPABASE_URL.includes("PEGA_AQUI") ||
+  SUPABASE_URL.includes("TU-PROYECTO") ||
   SUPABASE_PUBLISHABLE_KEY.includes("PEGA_AQUI")
 ) {
-  mensaje.textContent =
-    "Falta configurar la conexión con Supabase.";
-  return;
-}
-```
+  mensaje.textContent = "Falta configurar la conexión con Supabase.";
+} else {
   const cliente = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_PUBLISHABLE_KEY
+  );
+
+  // Deja aquí el resto de tu código de registro e inicio de sesión.
+}
+```
+
   );
 
   formulario.addEventListener("submit", async (evento) => {
